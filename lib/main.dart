@@ -12,45 +12,60 @@ class PerguntaApp extends StatefulWidget {
 class _PerguntaAppState extends State<PerguntaApp> {
   var _perguntaSelecionada = 0;
 
+  final List<Map<String, Object>> _perguntas = const [
+    {
+      'texto': 'Qual sua cor Favorita?',
+      'respostas': ['Preto', 'Vermelho', 'Azul', 'Preto']
+    },
+    {
+      'texto': 'Qual seu animal favorito?',
+      'respostas': ['Cachorro', 'Gato', 'Papagaio', 'cobra']
+    },
+    {
+      'texto': 'Qual seu instrutor favorito?',
+      'respostas': ['Ze', 'Francisco', 'testivaldo', 'Maria do teste']
+    },
+  ];
+
   void _responder() {
-    setState(() {
-      _perguntaSelecionada++;
-    });
+    if (temPeguntaselecionada) {
+      setState(() {
+        _perguntaSelecionada++;
+      });
+    }
+  }
+
+  bool get temPeguntaselecionada {
+    return _perguntaSelecionada < _perguntas.length;
   }
 
   @override
   Widget build(BuildContext context) {
-    final List<Map<String, Object>> perguntas = [
-      {
-        'texto': 'Qual sua cor Favorita?',
-        'respostas': ['Preto', 'Vermelho', 'Azul', 'Preto']
-      },
-      {
-        'texto': 'Qual seu animal favorito?',
-        'respostas': ['Cachorro', 'Gato', 'Papagaio', 'cobra']
-      },
-      {
-        'texto': 'Qual seu instrutor favorito?',
-        'respostas': ['Ze', 'Francisco', 'testivaldo', 'Maria do teste']
-      },
-    ];
+    List<String> respostas = temPeguntaselecionada
+        ? _perguntas[_perguntaSelecionada]['respostas']
+        : null;
+    List<Widget> widgetsResp =
+        respostas.map((txt) => Resposta(txt, _responder)).toList();
 
-    List<Widget> respostas = [];
-    for (var textoResp in perguntas[_perguntaSelecionada]['respostas']) {
-      respostas.add(Resposta(textoResp, _responder));
-    }
+    // for (var textoResp in respostas) {
+    //   widgets.add(Resposta(textoResp, _responder));
+    // }
 
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
           title: Center(child: Text('Perguntas')),
         ),
-        body: Column(
-          children: <Widget>[
-            Questao(perguntas[_perguntaSelecionada]['texto']),
-            ...respostas
-          ],
-        ),
+        body: temPeguntaselecionada
+            ? Column(
+                children: <Widget>[
+                  Questao(_perguntas[_perguntaSelecionada]['texto']),
+                  ...widgetsResp
+                ],
+              )
+            : Center(
+                child: Text('parabens'),
+              ),
       ),
     );
   }
