@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import './questao.dart';
 import './resposta.dart';
+import './resultado.dart';
+import './questionario.dart';
 
+//parado na aula 49, app quebrou e fui estudar dart
 main() => runApp(PerguntaApp());
 
 class PerguntaApp extends StatefulWidget {
@@ -35,15 +38,8 @@ class _PerguntaAppState extends State<PerguntaApp> {
     }
   }
 
-  bool get temPeguntaselecionada {
-    return _perguntaSelecionada < _perguntas.length;
-  }
-
   @override
   Widget build(BuildContext context) {
-    List<String> respostas = temPeguntaselecionada
-        ? _perguntas[_perguntaSelecionada]['respostas']
-        : null;
     List<Widget> widgetsResp =
         respostas.map((txt) => Resposta(txt, _responder)).toList();
 
@@ -57,15 +53,12 @@ class _PerguntaAppState extends State<PerguntaApp> {
           title: Center(child: Text('Perguntas')),
         ),
         body: temPeguntaselecionada
-            ? Column(
-                children: <Widget>[
-                  Questao(_perguntas[_perguntaSelecionada]['texto']),
-                  ...widgetsResp
-                ],
+            ? Questionario(
+                perguntas: _perguntas,
+                perguntaSelecionada: _perguntaSelecionada,
+                responder: _responder,
               )
-            : Center(
-                child: Text('parabens'),
-              ),
+            : Resultado(),
       ),
     );
   }
